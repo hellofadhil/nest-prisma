@@ -13,7 +13,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "npx prisma generate && nest start",
     "postinstall": "prisma generate",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
