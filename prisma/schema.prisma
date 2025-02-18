@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://neondb_owner:npg_3GitV2HkQDEh@ep-muddy-dream-a4bbivw3-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require"
+}
+
+model Categories {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @db.VarChar(100)
+  books     Books[]  @relation("BooksToCategories")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Authors {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @db.VarChar(100)
+  bio       String   @db.Text
+  books     Books[]  @relation("BooksToAuthors")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Books {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String     @db.VarChar(150)
+  desc           String     @db.Text
+  price          Decimal  
+  stock          Int 
+  published_date DateTime   @db.Date
+  category       Categories @relation("BooksToCategories", fields: [categoryId], references: [id])
+  categoryId     String     @db.Uuid
+  author         Authors    @relation("BooksToAuthors", fields: [authorId], references: [id])
+  authorId       String     @db.Uuid
+  cover_image    String
+  isbn           String     @db.VarChar(75)
+  page           Int
+  publisher      String
+  language       String     @db.VarChar(50)
+  reviews        Reviews[]  @relation("BooksToReviews")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+}
+
+model Reviews {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String   @db.VarChar(150)
+  book          Books    @relation("BooksToReviews", fields: [bookId], references: [id])
+  bookId        String   @db.Uuid
+  rating        Int      @db.SmallInt
+  comment       String   @db.Text
+  review_date   DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+}
