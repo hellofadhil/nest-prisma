@@ -15,14 +15,21 @@ export class BooksService {
     return this.prisma.books.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
+    return this.prisma.books.findUnique({ where: { id } })
+      .then(book => {
+        if (!book) {
+          throw new Error('Book not found');
+        }
+        return book;
+      })
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
+  update(id: string, updateBookDto: UpdateBookDto) {
     return `This action updates a #${id} book`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} book`;
   }
 }
